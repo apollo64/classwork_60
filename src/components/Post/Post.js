@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import './Post.css';
 
 
-const Post = React.memo(({title, body}) => {
+const Post = React.memo(({title, author}) => {
     useEffect(() => {
         console.log("[Post] useEffected");
     }, [])
@@ -11,7 +11,7 @@ const Post = React.memo(({title, body}) => {
         <article className="Post">
             <h2>{title}</h2>
             <div className="Info">
-                <p className="Author">{body}</p>
+                <p className="Author">{author}</p>
             </div>
         </article>
     )

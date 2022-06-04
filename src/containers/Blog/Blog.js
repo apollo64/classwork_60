@@ -3,6 +3,9 @@ import './Blog.css';
 import Post from "../../components/Post/Post";
 import PostsForm from "../../components/PostsForm/PostsForm";
 
+const BASE_URL = 'https://jsonplaceholder.typicode.com/';
+const POSTS_URL = 'posts?_limit=8';
+const USER_URL = 'users/';
 
 const Blog = () => {
     console.log("[Blog] render");
@@ -17,14 +20,34 @@ const Blog = () => {
         setPostsFormShown(!postsFormShown);
     }
 
-    useEffect(() => {
-        console.log("UseEffect")
-        const fetchData = async () => {
-            const response = await fetch(url);
+    const makeRequest = async url =>{
+        const res = await fetch(url);
+        if (res.ok) {
+            return res.json();
+        }
+        throw new Error("Something went wrong in makeRequest")
+    }
 
-            if(response.ok) {
-                const posts = await response.json();
-                setPosts(posts);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+
+                const posts = await makeRequest(BASE_URL+POSTS_URL);
+                console.log("[Blog] useeffect posts", posts)
+                
+                const promises = posts.map(async (post) =>{
+                    const userUrl = BASE_URL+USER_URL+post.userId;
+                    const user = await makeRequest(userUrl);
+                    return {...post, author: user.name};
+                })
+                console.log("[Blog] useeffect promises", promises)
+                
+                const updatedPosts = await Promise.all(promises)
+                console.log("[Blog] useeffect updatedPosts", updatedPosts)
+                setPosts(updatedPosts);   
+            } catch (e) {
+                console.log("[Blog] useeffect error", e.message)
             }
         }
 
@@ -40,7 +63,7 @@ const Blog = () => {
                         <Post
                             key={post.id}
                             title={post.title}
-                            body={post.body}
+                            author={post.author}
                         />
                     )
                 })}
