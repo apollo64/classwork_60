@@ -6,7 +6,6 @@ const Post = React.memo(({title, author, clicked}) => {
     useEffect(() => {
         console.log("[Post] useEffected");
     }, [])
-    console.log("[Post] render");
     return (
         <article className="Post" onClick={clicked}>
             <h2>{title}</h2>

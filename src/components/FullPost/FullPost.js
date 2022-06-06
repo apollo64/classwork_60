@@ -1,26 +1,27 @@
 import React, {useCallback, useState, useEffect} from 'react';
 import './FullPost.css';
 import axios from 'axios';
+import { POST_URL } from '../../constants';
 
-export default (props)=> {
+export default ({id})=> {
 
     const [post, setPost]= useState(null);
 
     const fetchData = useCallback( async () =>{
-        if (props.id !== null) {
-            const postResponse = await axios.get(POST_URL + props.id);
+        if (id !== null) {
+            const postResponse = await axios.get(POST_URL + id);
             setPost(postResponse.data);
         }
-    }, [props.id]);
+    }, [id]);
 
     useEffect(() =>{
-        console.log('[FullPost] id=', props.id);
+        console.log('[FullPost] id=', id);
         fetchData().catch(console.error)
-    }, [props.id]);
+    }, [id]);
   
     return post && (
     <div className="FullPost">
-    {props.id}
+    {id}
       <h1>{post.title}</h1>
       <p>{post.body}</p>
       <div className="Edit">

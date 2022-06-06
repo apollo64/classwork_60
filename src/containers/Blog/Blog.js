@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import axios from 'axios';
 import './Blog.css';
 import Post from "../../components/Post/Post";
 import PostsForm from "../../components/PostsForm/PostsForm";
 import FullPost from "../../components/FullPost/FullPost";
+import {POSTS_URL, BASE_URL, USER_URL} from '../../constants';
+import axios from 'axios';
 
 
 const Blog = () => {
@@ -33,11 +34,11 @@ const Blog = () => {
         const fetchData = async () => {
             try {
 
-                const postsResponse = await axios.get(BASE_URL+POSTS_URL);
-                // console.log("[Blog] useeffect postsResponse", postsResponse)
+                const postsResponse = await axios.get(POSTS_URL);
+                console.log("[Blog] useeffect postsResponse", postsResponse)
                 const posts = postsResponse.data;
                 const promises = posts.map(async (post) =>{
-                    const userUrl = BASE_URL+USER_URL+post.userId;
+                    const userUrl = USER_URL+post.userId;
                     const userResponse = await axios.get(userUrl);
                     console.log("[Blog] userResponse",userResponse)
                     return {...post, author: userResponse.data.name};
