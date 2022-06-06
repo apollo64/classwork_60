@@ -6,10 +6,6 @@ import PostsForm from "../../components/PostsForm/PostsForm";
 import FullPost from "../../components/FullPost/FullPost";
 
 
-const BASE_URL = 'https://jsonplaceholder.typicode.com/';
-const POSTS_URL = 'posts?_limit=8';
-const USER_URL = 'users/';
-
 const Blog = () => {
     console.log("[Blog] render");
 
@@ -19,18 +15,18 @@ const Blog = () => {
 
     const [error, setError] = useState(null);
 
-    const url = 'https://jsonplaceholder.typicode.com/posts?_limit=8';
+    // const url = 'https://jsonplaceholder.typicode.com/posts?_limit=2';
     const togglePostsForm = () => {
         setPostsFormShown(!postsFormShown);
     }
 
-    const makeRequest = async url =>{
-        const res = await fetch(url);
-        if (res.ok) {
-            return res.json();
-        }
-        throw new Error("Something went wrong in makeRequest")
-    }
+    // const makeRequest = async url =>{
+    //     const res = await fetch(url);
+    //     if (res.ok) {
+    //         return res.json();
+    //     }
+    //     throw new Error("Something went wrong in makeRequest")
+    // }
 
 
     useEffect(() => {
@@ -38,7 +34,7 @@ const Blog = () => {
             try {
 
                 const postsResponse = await axios.get(BASE_URL+POSTS_URL);
-                console.log("[Blog] useeffect postsResponse", postsResponse)
+                // console.log("[Blog] useeffect postsResponse", postsResponse)
                 const posts = postsResponse.data;
                 const promises = posts.map(async (post) =>{
                     const userUrl = BASE_URL+USER_URL+post.userId;
@@ -46,18 +42,18 @@ const Blog = () => {
                     console.log("[Blog] userResponse",userResponse)
                     return {...post, author: userResponse.data.name};
                 })
-                console.log("[Blog] useeffect promises", promises)
+                // console.log("[Blog] useeffect promises", promises)
                 
                 const updatedPosts = await Promise.all(promises)
-                console.log("[Blog] useeffect updatedPosts", updatedPosts)
+                // console.log("[Blog] useeffect updatedPosts", updatedPosts)
                 setPosts(updatedPosts);   
             } catch (e) {
-                console.log("[Blog] useeffect error", e.message)
+                // console.log("[Blog] useeffect error", e.message)
             }
         }
 
         fetchData().catch(e => {setError(e)});
-        console.log("[Blog] component mounted and updated");
+        // console.log("[Blog] component mounted and updated");
     }, []);
 
     return (
@@ -69,23 +65,47 @@ const Blog = () => {
                             key={post.id}
                             title={post.title}
                             author={post.author}
-                            clicked = {() => {selectedPostId(post.id)}}
+                            clicked = {() => {setSelectedPostId(post.id)}}
                         />
                     )
                 })}
             </section>
-            {/* <button className="ToggleButton" onClick={togglePostsForm}>New post</button> */}
-            {/* {postsFormShown ?
-                <PostsForm/> : null
-            } */}
+
             <section>
           <FullPost 
               id={selectedPostId}
           />
         </section>
+                <button className="ToggleButton" onClick={togglePostsForm}>New Post</button>
+                {postsFormShown ? 
+                <PostsForm/> :null
+                }
+
         </>
     )
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // class Blog extends Component {
 //     state = {
 //         posts: [

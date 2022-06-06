@@ -2,13 +2,13 @@ import React, {useEffect} from 'react';
 import './Post.css';
 
 
-const Post = React.memo(({title, author}) => {
+const Post = React.memo(({title, author, clicked}) => {
     useEffect(() => {
         console.log("[Post] useEffected");
     }, [])
     console.log("[Post] render");
     return (
-        <article className="Post" onClick={this.props.clicked}>
+        <article className="Post" onClick={clicked}>
             <h2>{title}</h2>
             <div className="Info">
                 <p className="Author">{author}</p>
@@ -16,6 +16,9 @@ const Post = React.memo(({title, author}) => {
         </article>
     )
 })
+
+export default Post;
+
 // class Post extends Component {
 //     constructor(props) {
 //         super(props);
@@ -45,4 +48,4 @@ const Post = React.memo(({title, author}) => {
 //     }
 // }
 //
-export default Post;
+
