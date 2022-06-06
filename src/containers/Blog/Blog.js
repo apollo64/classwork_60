@@ -1,7 +1,10 @@
 import React, {useEffect, useState} from 'react';
+import axios from 'axios';
 import './Blog.css';
 import Post from "../../components/Post/Post";
 import PostsForm from "../../components/PostsForm/PostsForm";
+import FullPost from "../../components/FullPost/FullPost";
+
 
 const BASE_URL = 'https://jsonplaceholder.typicode.com/';
 const POSTS_URL = 'posts?_limit=8';
@@ -12,6 +15,7 @@ const Blog = () => {
 
     const [posts, setPosts] = useState([]);
     const [postsFormShown, setPostsFormShown] = useState(false);
+    const [selectedPostId, setSelectedPostId] = useState(null);
 
     const [error, setError] = useState(null);
 
@@ -33,13 +37,14 @@ const Blog = () => {
         const fetchData = async () => {
             try {
 
-                const posts = await makeRequest(BASE_URL+POSTS_URL);
-                console.log("[Blog] useeffect posts", posts)
-                
+                const postsResponse = await axios.get(BASE_URL+POSTS_URL);
+                console.log("[Blog] useeffect postsResponse", postsResponse)
+                const posts = postsResponse.data;
                 const promises = posts.map(async (post) =>{
                     const userUrl = BASE_URL+USER_URL+post.userId;
-                    const user = await makeRequest(userUrl);
-                    return {...post, author: user.name};
+                    const userResponse = await axios.get(userUrl);
+                    console.log("[Blog] userResponse",userResponse)
+                    return {...post, author: userResponse.data.name};
                 })
                 console.log("[Blog] useeffect promises", promises)
                 
@@ -64,14 +69,20 @@ const Blog = () => {
                             key={post.id}
                             title={post.title}
                             author={post.author}
+                            clicked = {() => {selectedPostId(post.id)}}
                         />
                     )
                 })}
             </section>
-            <button className="ToggleButton" onClick={togglePostsForm}>New post</button>
-            {postsFormShown ?
+            {/* <button className="ToggleButton" onClick={togglePostsForm}>New post</button> */}
+            {/* {postsFormShown ?
                 <PostsForm/> : null
-            }
+            } */}
+            <section>
+          <FullPost 
+              id={selectedPostId}
+          />
+        </section>
         </>
     )
 }

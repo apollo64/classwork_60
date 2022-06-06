@@ -8,7 +8,7 @@ const Post = React.memo(({title, author}) => {
     }, [])
     console.log("[Post] render");
     return (
-        <article className="Post">
+        <article className="Post" onClick={this.props.clicked}>
             <h2>{title}</h2>
             <div className="Info">
                 <p className="Author">{author}</p>
